@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: model-training-job
+  namespace: ml-system
+spec:
+  template:
+    spec:
+      containers:
+      - name: trainer
+        image: ml-training:1.0
+
+        volumeMounts:
+        - mountPath: /model
+          name: model-storage
+
+      restartPolicy: Never
+
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc

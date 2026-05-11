@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-deployment
+  namespace: ml-system
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: inference
+
+  template:
+    metadata:
+      labels:
+        app: inference
+
+    spec:
+      containers:
+      - name: inference-container
+        image: ml-inference:1.0
+
+        ports:
+        - containerPort: 5000
+
+        volumeMounts:
+        - mountPath: /model
+          name: model-storage
+
+      volumes:
+      - name: model-storage
+        persistentVolumeClaim:
+          claimName: model-pvc
